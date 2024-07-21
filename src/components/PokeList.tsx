@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
 import { getPokemon } from '../api/getPokemon';
+import { useQuery } from '../hooks/useQuery';
 
 type Pokemon = {
 	name: string;
@@ -7,26 +7,19 @@ type Pokemon = {
 };
 
 const PokeList = () => {
-	const [pokemon, setPokemon] = useState<Pokemon[]>([]);
+	const { data: pokemon, isLoading } = useQuery<Pokemon[]>({
+		queryFn: getPokemon,
+	});
 
-	useEffect(() => {
-		const fetchdata = async () => {
-			const response = await getPokemon();
-			setPokemon(response);
-		};
-
-		if (pokemon.length === 0) {
-			fetchdata();
-		}
-	}, [pokemon]);
+	if (isLoading) {
+		return <div>Loading...</div>;
+	}
 
 	return (
 		<>
 			<button>Refetch</button>
 			<ul>
-				{pokemon.map((item) => (
-					<li key={item.name}>{item.name}</li>
-				))}
+				{pokemon && pokemon.map((item) => <li key={item.name}>{item.name}</li>)}
 			</ul>
 		</>
 	);
