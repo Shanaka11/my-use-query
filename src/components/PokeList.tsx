@@ -7,7 +7,11 @@ type Pokemon = {
 };
 
 const PokeList = () => {
-	const { data: pokemon, isLoading } = useQuery<Pokemon[]>({
+	const {
+		data: pokemon,
+		isLoading,
+		runQuery,
+	} = useQuery<Pokemon[]>({
 		queryFn: getPokemon,
 	});
 
@@ -17,7 +21,7 @@ const PokeList = () => {
 
 	return (
 		<>
-			<button>Refetch</button>
+			<button onClick={() => runQuery()}>Refetch</button>
 			<ul>
 				{pokemon && pokemon.map((item) => <li key={item.name}>{item.name}</li>)}
 			</ul>
