@@ -1,4 +1,5 @@
 import { getPokemon } from '../api/getPokemon';
+import { useCache } from '../cache/cache';
 import { useQuery } from '../hooks/useQuery';
 
 type Pokemon = {
@@ -7,11 +8,13 @@ type Pokemon = {
 };
 
 const PokeList = () => {
+	const { invalidate } = useCache();
 	const {
 		data: pokemon,
 		isLoading,
 		runQuery,
 	} = useQuery<Pokemon[]>({
+		queryKey: 'pokemon',
 		queryFn: getPokemon,
 	});
 
@@ -22,6 +25,7 @@ const PokeList = () => {
 	return (
 		<>
 			<button onClick={() => runQuery()}>Refetch</button>
+			<button onClick={() => invalidate('pokemon')}>Revalidate</button>
 			<ul>
 				{pokemon && pokemon.map((item) => <li key={item.name}>{item.name}</li>)}
 			</ul>
